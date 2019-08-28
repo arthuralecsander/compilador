@@ -33,7 +33,14 @@ class Main {
 		        			{
 		        			case DecafLexer.ID:
 		        				type = " IDENTIFIER";
-		        				break;
+							break;
+						case DecafLexer.MUNDCHAR:
+							type = " Mundano";
+							break;
+						case DecafLexer.PRESRV:
+							type = " PALAVRA RESERVADA";
+							break;
+
 		        			}
 		        			System.out.println (token.getLine() + type + " " + text);
 		        		}
