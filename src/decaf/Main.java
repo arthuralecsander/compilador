@@ -35,12 +35,11 @@ class Main {
 		        				type = " IDENTIFIER";
 							break;
 						case DecafLexer.MUNDCHAR:
-							type = " Mundano";
+							type = " MUNDANE CHAR";
 							break;
-						case DecafLexer.PRESRV:
-							type = " PALAVRA RESERVADA";
-							break;
-
+						case DecafLexer.BACKS:
+							type = " BACKSLASH";
+							break;	
 		        			}
 		        			System.out.println (token.getLine() + type + " " + text);
 		        		}
