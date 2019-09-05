@@ -17,41 +17,48 @@ tokens
 LCURLY : '{';
 RCURLY : '}';
 
+PRESRV : 'boolean'|'break'|'callout'|'class'|'continue'|'else'|'if'|'for'|'int'|'return'|'void';
+
+BOOLEANS: 'true'|'false';
+
+INT : ('0'..'9');
+
 ID  :
-  ('a'..'z' | 'A'..'Z')+;
+  ('a'..'z' | 'A'..'Z' | '_' )+ | ('a'..'z' | 'A'..'Z' | '_' | INT)+;
 
 
 WS_ : (' ' | '\n' | '\t' | '	' ) -> skip;
 
-SL_COMMENT : '//' (~'\n')* '\n' -> skip;
+SL_COMMENT : '//' CHARS* '\n' -> skip;
 
 //CHAR : '\'' (ESC|~'\'') '\'';
 //STRING : '"' (ESC|~'"')* '"' | '\'' (ESC|~'"') '\'';
 
-fragment
-ESC :  '\\' ('n'|'"');
-
-
-INT :
-  ('0'..'9');
-
-CHARS :
-  ( 'a'..'z' | 'A'..'Z' ) | INT;
+fragment CHARS :
+  ( 'a'..'z' | 'A'..'Z' ) | INT | BACKS | WSPACE | SIMBOLS;
 
 MUNDCHAR :
-  '\'' CHARS '\'';
+  '\'' (CHARS) '\'' ;
 
-STRING :
-  '\"' CHARS+ '\"';
+STRING_ :
+  '\"' (CHARS)+ '\"';
 
-PRESRV :
-  'boolean'|'break'|'callout'|'class'|'continue'|'else'|'false'|'for'|'int'|'return'|'true'|'void';
 
-BACKS :
-  '\''('\\n' | '\\t' | '\\\\' | '\\"')'\'';
 
-MISS :
-  '\''+;
+fragment BACKS :
+  '\\n' | '\\t' | '\\\\' | '\\"' | '\\\'';
 
+fragment WSPACE : 
+   (' ')+;
+
+fragment SIMBOLS:
+   '.' | ',' | ':' | '?';
+
+OPAR:
+'+'|'-'|'*'|'/';
+OPLOG:
+'&&'|'||';
+OPRE:
+'<'|'<='|'=!'|'>'|'=>'|'==';
 // '-'?INT (para negativo ser opcional)
 

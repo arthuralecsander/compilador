@@ -37,11 +37,19 @@ class Main {
 						case DecafLexer.MUNDCHAR:
 							type = " MUNDANE CHAR";
 							break;
-						case DecafLexer.BACKS:
-							type = " BACKSLASH";
-							break;	
-		        			}
-		        			System.out.println (token.getLine() + type + " " + text);
+					    case DecafLexer.STRING_:
+							type = " STRING";
+							break;
+						case DecafLexer.INT:
+						    type = " INT LITERAL";
+							break;
+						case DecafLexer.BOOLEANS:
+							type = " BOOLEAN LITERAL";
+							break;
+						}
+						
+
+						System.out.println (token.getLine() + type + " " + text);
 		        		}
 		        		done = true;
         			} catch(Exception e) {
