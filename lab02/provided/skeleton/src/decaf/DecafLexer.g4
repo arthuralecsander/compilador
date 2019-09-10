@@ -48,6 +48,12 @@ MUNDCHAR :
 STRING_ :
   '\"' (CHARS)+ '\"';
 
+SEMICOLON :
+  ';';
+
+COMMA :
+  ',';
+
 
 fragment LETRAS : ('a'..'z' | 'A'..'Z');
 
@@ -55,13 +61,16 @@ fragment BACKS : '\\n' | '\\t' | '\\\\' | '\\"' | '\\\'';
 
 fragment WSPACE : (' ')+;
 
-fragment SIMBOLS: '.' | ',' | ':' | '?' | ';' | ',';
+fragment SIMBOLS: '.' | ',' | ':' | '?' | ';';
 
 OPAR:
 '+'|'-'|'*'|'/'|'=';
+
 OPLOG:
 '&&'|'||';
+
 OPRE:
 '<'|'<='|'!='|'>'|'=>'|'==';
+
 // '-'?INT (para negativo ser opcional)
 
