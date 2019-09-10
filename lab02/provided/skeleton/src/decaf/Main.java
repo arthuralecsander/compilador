@@ -47,6 +47,7 @@ class Main {
 							type = " BOOLEAN LITERAL";
 							break;
 							}
+						}
 						System.out.println (token.getLine() + type + " " + text);
 		        		}
 		        		done = true;
