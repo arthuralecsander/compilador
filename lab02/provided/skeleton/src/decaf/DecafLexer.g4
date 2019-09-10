@@ -27,41 +27,21 @@ PRESRV : 'boolean'|'break'|'callout'|'class'|'continue'|'else'|'if'|'for'|'int'|
 
 BOOLEANS: 'true'|'false';
 
-INT : ('0'..'9')+;
+HEXN : '0' 'x' (INT|LETRAS)+ ;
 
-//ID  : ('a'..'z' | 'A'..'Z' | '_' )+ | ('a'..'z' | 'A'..'Z' | '_' | INT)+;
+INT :  ('0'..'9')+;
+
 ID : LETRAS (LETRAS | '_' | INT)*;
 
 WS_ : (' ' | '\n' | '\t' | '	' ) -> skip;
 
 SL_COMMENT : '//' (CHARS|'\'')* '\n' -> skip;
 
-//CHAR : '\'' (ESC|~'\'') '\'';
-//STRING : '"' (ESC|~'"')* '"' | '\'' (ESC|~'"') '\'';
-
-fragment CHARS :
-  LETRAS | INT | BACKS | WSPACE | SIMBOLS;
-
 MUNDCHAR :
   '\'' (CHARS) '\'' ;
 
 STRING_ :
   '\"' (CHARS)+ '\"';
-
-SEMICOLON :
-  ';';
-
-COMMA :
-  ',';
-
-
-fragment LETRAS : ('a'..'z' | 'A'..'Z');
-
-fragment BACKS : '\\n' | '\\t' | '\\\\' | '\\"' | '\\\'';
-
-fragment WSPACE : (' ')+;
-
-fragment SIMBOLS: '.' | ',' | ':' | '?' | ';';
 
 OPAR:
 '+'|'-'|'*'|'/'|'=';
@@ -71,6 +51,24 @@ OPLOG:
 
 OPRE:
 '<'|'<='|'!='|'>'|'=>'|'==';
+
+SEMICOLON :
+  ';';
+
+COMMA :
+  ',';
+
+
+fragment CHARS : LETRAS | INT | BACKS | WSPACE | SIMBOLS;
+
+fragment LETRAS : ('a'..'z' | 'A'..'Z');
+
+fragment BACKS : '\\n' | '\\t' | '\\\\' | '\\"' | '\\\'';
+
+fragment WSPACE : (' ')+;
+
+fragment SIMBOLS: '.' | ',' | ':' | '?' | ';';
+
 
 // '-'?INT (para negativo ser opcional)
 
