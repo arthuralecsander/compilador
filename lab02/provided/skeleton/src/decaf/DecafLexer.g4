@@ -27,9 +27,9 @@ PRESRV : 'boolean'|'break'|'callout'|'class'|'continue'|'else'|'if'|'for'|'int'|
 
 BOOLEANS: 'true'|'false';
 
-HEXN : '0' 'x' (INT|LETRAS)+ ;
+INT :  ('0'..'9')+ | HEXN;
 
-INT :  ('0'..'9')+;
+HEXN : '0' 'x' (INT|LETRAS)+ ;
 
 ID : LETRAS (LETRAS | '_' | INT)*;
 
