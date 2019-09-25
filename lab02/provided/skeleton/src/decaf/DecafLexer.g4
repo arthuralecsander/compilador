@@ -23,7 +23,17 @@ RPARENTESE: ')';
 LBRACKETS: '[';
 RBRACKETS: ']';
 
-PRESRV : 'boolean'|'break'|'callout'|'class'|'continue'|'else'|'if'|'for'|'int'|'return'|'void';
+BOOLEAN: 'boolean' ; 
+BREAK: 'break' ; 
+CALLOUT: 'callout' ; 
+CLASS: 'class' ;
+CONTINUE: 'continue' ;
+ELSE: 'else' ;
+IF: 'if' ;
+FOR: 'for' ;
+INT: 'int' ;
+RETURN: 'return' ;
+VOID: 'void' ;
 
 BOOLEANS: 'true'|'false';
 
@@ -43,8 +53,12 @@ MUNDCHAR :
 STRING_ :
   '\"' (CHARS)+ '\"';
 
-OPAR:
-'+'|'-'|'*'|'/'|'=';
+//operadores
+OPPOS: '+' ;
+OPNEG: '-' ;
+OPMUL: '*' ;
+OPDIV: '/' ;
+OPIGU: '=' ;
 
 OPLOG:
 '&&'|'||';
