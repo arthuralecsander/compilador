@@ -17,11 +17,11 @@ tokens
 LCURLY : '{';
 RCURLY : '}';
 
-LPARENTESE: '(';
-RPARENTESE: ')';
+LPAR: '(';
+RPAR: ')';
 
-LBRACKETS: '[';
-RBRACKETS: ']';
+LBRAC: '[';
+RBRAC: ']';
 
 BOOLEAN: 'boolean' ; 
 BREAK: 'break' ; 
@@ -31,7 +31,7 @@ CONTINUE: 'continue' ;
 ELSE: 'else' ;
 IF: 'if' ;
 FOR: 'for' ;
-INT: 'int' ;
+INTV: 'int' ;
 RETURN: 'return' ;
 VOID: 'void' ;
 
@@ -59,14 +59,21 @@ OPNEG: '-' ;
 OPMUL: '*' ;
 OPDIV: '/' ;
 OPIGU: '=' ;
+OPMIG: '+=' ;
+OPMME: '-=' ;
 
 OPLOG:
 '&&'|'||';
 
-OPRE:
-'<'|'<='|'!='|'>'|'=>'|'==';
 
-SEMICOLON :
+OPMEN: '<' ;
+OPMAI: '>' ;
+OPMENI: '<=' ;
+OPMAII: '>=' ;
+OPCIG: '==' ;
+OPDIF: '!=' ;
+
+PVIRG :
   ';';
 
 COMMA :
