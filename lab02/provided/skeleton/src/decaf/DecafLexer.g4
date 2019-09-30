@@ -62,6 +62,8 @@ OPIGU: '=' ;
 OPMIG: '+=' ;
 OPMME: '-=' ;
 
+DIF: ! ;
+
 OPLOG:
 '&&'|'||';
 

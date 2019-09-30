@@ -10,7 +10,7 @@ options
   tokenVocab=DecafLexer;
 }
 
-program: CLASS ID LCURLY (field_dec* method_decl*) RCURLY EOF;
+program: CLASS ID LCURLY (field_dec+ method_decl+) RCURLY EOF;
 
 field_dec: (type ID | type ID LBRAC INT RBRAC) PVIRG ;
 
@@ -35,12 +35,33 @@ assign_op:	  OPIGU
 		| OPMIG
 		| OPMME ;
 
-method_call: method_name ;
+method_call:	 method_name LPAR (COMMA expr)* RPAR
+				| CALLOUT LPAR STRING_ (callout_arg (COMMA callout_arg)*)? RPAR;
 
-loc: ;
+method_name: ID ;				
 
-method_name: ;
+loc: ID
+	|ID LBRAC expr RBRAC ;
 
+expr: loc
+	| method_call
+	| literal
+	| expr bin_op expr
+	| OPNEG expr
+	| DIF expr
+	| LPAR expr RPAR;
 
-expr: ;
+callout_arg: expr | STRING_ ;
+
+bin_op: arith_op | rel_op | eq_op | cond_op ;
+
+arith_op:  ;
+
+rel_op:  ;
+
+eq_op:  ;
+
+cond_op:  ;
+
+literal: INT, MUNDCHAR, BOOLEANS ;
 
