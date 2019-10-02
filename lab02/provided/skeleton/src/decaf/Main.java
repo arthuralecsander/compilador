@@ -1,18 +1,3 @@
-Data de entrega: 2 de out 11:20
-Análise Sintática
-100 pontos
-Eduardo Ferreira dos Santos 14 de ago Editado às 12 de set
-201902-Projeto-Compiladores.pdf
-PDF
-Main.java
-Java
-02-decaf-manual.pdf
-PDF
-Comentários da turma
-Seus trabalhos
-Atribuído
-Comentários particulares
-
 package decaf;
 
 import java.io.*;
@@ -70,6 +55,7 @@ class Main {
 								case DecafLexer.BOOLEANS:
 								type = " BOOLEAN LITERAL";
 							break;
+
 		        			}
 		        			System.out.println (token.getLine() + type + " " + text);
 		        		}

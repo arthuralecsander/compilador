@@ -53,19 +53,21 @@ MUNDCHAR :
 STRING_ :
   '\"' (CHARS)+ '\"';
 
+
 //operadores
 OPPOS: '+' ;
 OPNEG: '-' ;
 OPMUL: '*' ;
 OPDIV: '/' ;
+OPPER: '%' ;
 OPIGU: '=' ;
 OPMIG: '+=' ;
 OPMME: '-=' ;
 
-DIF: ! ;
+DIF: '!' ;
 
-OPLOG:
-'&&'|'||';
+OPLOGE: '&&' ;
+OPLOGO: '||' ;
 
 
 OPMEN: '<' ;
@@ -90,7 +92,7 @@ fragment BACKS : '\\n' | '\\t' | '\\\\' | '\\"' | '\\\'';
 
 fragment WSPACE : (' ')+;
 
-fragment SIMBOLS: '.' | ',' | ':' | '?' | ';';
+fragment SIMBOLS: '.' | ',' | ':' | '?' | ';' | '%' ;
 
 
 // '-'?INT (para negativo ser opcional)

@@ -10,13 +10,13 @@ options
   tokenVocab=DecafLexer;
 }
 
-program: CLASS ID LCURLY (field_dec+ method_decl+) RCURLY EOF;
+program: CLASS ID LCURLY (field_dec* method_decl*) RCURLY EOF;
 
 field_dec: (type ID | type ID LBRAC INT RBRAC) PVIRG ;
 
 method_decl: (type | VOID ) ID LPAR (type ID (COMMA type ID)*)? RPAR block ;
 
-block: LCURLY var_dec* state RCURLY ;
+block: LCURLY var_dec* state* RCURLY ;
 
 var_dec: type ID (COMMA type ID)* PVIRG ;
 
@@ -24,9 +24,9 @@ type: INTV | BOOLEAN ;
 
 state: 	loc assign_op expr PVIRG
 	| method_call PVIRG
-	| IF LPAR expr RPAR (ELSE block)? 
+	| IF LPAR expr RPAR block (ELSE block)? 
 	| FOR ID OPIGU expr COMMA expr block
-	| RETURN expr?
+	| RETURN expr? PVIRG
 	| BREAK PVIRG
 	| CONTINUE PVIRG
 	| block;
@@ -35,8 +35,8 @@ assign_op:	  OPIGU
 		| OPMIG
 		| OPMME ;
 
-method_call:	 method_name LPAR (COMMA expr)* RPAR
-				| CALLOUT LPAR STRING_ (callout_arg (COMMA callout_arg)*)? RPAR;
+method_call:	  method_name LPAR (expr (COMMA expr)?)* RPAR
+		| CALLOUT LPAR STRING_ (COMMA callout_arg (COMMA callout_arg)*)? RPAR;
 
 method_name: ID ;				
 
@@ -45,7 +45,7 @@ loc: ID
 
 expr: loc
 	| method_call
-	| literal
+	| literal 
 	| expr bin_op expr
 	| OPNEG expr
 	| DIF expr
@@ -55,13 +55,23 @@ callout_arg: expr | STRING_ ;
 
 bin_op: arith_op | rel_op | eq_op | cond_op ;
 
-arith_op:  ;
+arith_op: OPPOS
+	| OPNEG
+	| OPMUL
+	| OPDIV
+	| OPPER;
 
-rel_op:  ;
+rel_op:   OPMEN
+	| OPMAI
+	| OPMENI
+	| OPMAII;
 
-eq_op:  ;
+eq_op:    OPCIG
+	| OPDIF ;
 
-cond_op:  ;
+cond_op: OPLOGE
+	|OPLOGO ;
 
-literal: INT, MUNDCHAR, BOOLEANS ;
+literal: INT | MUNDCHAR| BOOLEANS ;
+
 
