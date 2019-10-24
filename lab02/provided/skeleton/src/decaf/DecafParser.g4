@@ -14,13 +14,15 @@ program: CLASS ID LCURLY (field_dec* method_decl*) RCURLY EOF;
 
 field_dec: (type ID | type ID LBRAC INT RBRAC) PVIRG ;
 
-method_decl: (type | VOID ) ID LPAR (type ID (COMMA type ID)*)? RPAR block ;
+method_decl: (type | VOID ) ID LPAR (type_id (COMMA type_id)*)? RPAR block ;
 
 block: LCURLY var_dec* state* RCURLY ;
 
 var_dec: type ID (COMMA type ID)* PVIRG ;
 
 type: INTV | BOOLEAN ;
+
+type_id: type ID;
 
 state: 	loc assign_op expr PVIRG
 	| method_call PVIRG
