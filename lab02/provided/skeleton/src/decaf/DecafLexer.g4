@@ -84,7 +84,7 @@ COMMA :
   ',';
 
 
-fragment CHARS : LETRAS | INT | BACKS | WSPACE | SIMBOLS;
+fragment CHARS : LETRAS | INT | BACKS | WSPACE | SIMBOLS | STRING_;
 
 fragment LETRAS : ('a'..'z' | 'A'..'Z');
 

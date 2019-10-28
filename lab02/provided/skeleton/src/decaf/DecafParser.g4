@@ -12,7 +12,8 @@ options
 
 program: CLASS ID LCURLY (field_dec* method_decl*) RCURLY EOF;
 
-field_dec: (type ID | type ID LBRAC INT RBRAC) PVIRG ;
+field_dec: (type_id | type_id LBRAC INT RBRAC) (COMMA type_id2 | COMMA type_id2 LBRAC INT RBRAC)* PVIRG;
+//(type ID | type ID LBRAC INT RBRAC) PVIRG ;
 
 method_decl: (type | VOID ) ID LPAR (type_id (COMMA type_id)*)? RPAR block ;
 
@@ -22,7 +23,9 @@ var_dec: type ID (COMMA type ID)* PVIRG ;
 
 type: INTV | BOOLEAN ;
 
-type_id: type ID;
+type_id: type ID (PVIRG ID)* ;
+
+type_id2: type? ID;
 
 state: 	loc assign_op expr PVIRG
 	| method_call PVIRG
