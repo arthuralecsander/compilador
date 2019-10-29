@@ -70,7 +70,6 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
 
     }
 	
-	
 	@Override public void exitType_id(DecafParser.Type_idContext ctx) { 
         for(int i = 0 ; i < ctx.ID().size(); i++){
             String name = ctx.ID(i).getSymbol().getText();
@@ -113,8 +112,9 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
         int typeTokenType = typeCtx.start.getType();
         VariableSymbol var = new VariableSymbol(nameToken.getText());
 
-        // DecafSymbol.Type type = this.getType(typeTokenType);
-        // var.setType(type);
+        // DecafSymbol.Type type = this.getType(typeTokenType); 
+        // var.setType(type);                                   //TestarQuarta! Com e sem
+         
 
         currentScope.define(var); // Define symbol in current scope
     }

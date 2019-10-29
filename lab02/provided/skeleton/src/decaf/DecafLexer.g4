@@ -35,6 +35,16 @@ INTV: 'int' ;
 RETURN: 'return' ;
 VOID: 'void' ;
 
+//operadores
+OPPOS: '+' ;
+OPNEG: '-' ;
+OPMUL: '*' ;
+OPDIV: '/' ;
+OPPER: '%' ;
+OPIGU: '=' ;
+OPMIG: '+=' ;
+OPMME: '-=' ;
+
 BOOLEANS: 'true'|'false';
 
 INT :  ('0'..'9')+ | HEXN;
@@ -54,20 +64,14 @@ STRING_ :
   '\"' (CHARS)+ '\"';
 
 
-//operadores
-OPPOS: '+' ;
-OPNEG: '-' ;
-OPMUL: '*' ;
-OPDIV: '/' ;
-OPPER: '%' ;
-OPIGU: '=' ;
-OPMIG: '+=' ;
-OPMME: '-=' ;
+
 
 DIF: '!' ;
 
 OPLOGE: '&&' ;
 OPLOGO: '||' ;
+
+//operadores
 
 
 OPMEN: '<' ;
@@ -77,14 +81,12 @@ OPMAII: '>=' ;
 OPCIG: '==' ;
 OPDIF: '!=' ;
 
-PVIRG :
-  ';';
+PVIRG : ';';
 
-COMMA :
-  ',';
+COMMA : ',';
 
 
-fragment CHARS : LETRAS | INT | BACKS | WSPACE | SIMBOLS | STRING_;
+fragment CHARS : LETRAS | INT | BACKS | WSPACE | SIMBOLS;
 
 fragment LETRAS : ('a'..'z' | 'A'..'Z');
 

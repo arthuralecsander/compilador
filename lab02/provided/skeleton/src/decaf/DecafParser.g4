@@ -15,7 +15,8 @@ program: CLASS ID LCURLY (field_dec* method_decl*) RCURLY EOF;
 field_dec: (type_id | type_id LBRAC INT RBRAC) (COMMA type_id2 | COMMA type_id2 LBRAC INT RBRAC)* PVIRG;
 //(type ID | type ID LBRAC INT RBRAC) PVIRG ;
 
-method_decl: (type | VOID ) ID LPAR (type_id (COMMA type_id)*)? RPAR block ;
+method_decl: (type | VOID) LPAR (type_id (COMMA type_id | type_id LBRAC INTV RBRAC)(COMMA type_id2 | COMMA type_id2 LBRAC INTV RBRAC)*)* RPAR;
+//(type | VOID ) ID LPAR (type_id (COMMA type_id)*)? RPAR block ;
 
 block: LCURLY var_dec* state* RCURLY ;
 
