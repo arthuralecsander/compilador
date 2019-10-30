@@ -23,6 +23,10 @@ RPAR: ')';
 LBRAC: '[';
 RBRAC: ']';
 
+SL_COMMENT : '//' (CHARS | '\"'| '\'')* -> skip;
+
+//SL_COMMENT: '//' ~[\n\t]* -> skip;
+
 BOOLEAN: 'boolean' ; 
 BREAK: 'break' ; 
 CALLOUT: 'callout' ; 
@@ -55,7 +59,8 @@ ID : LETRAS (LETRAS | '_' | INT)*;
 
 WS_ : (' ' | '\n' | '\t' | '	' ) -> skip;
 
-SL_COMMENT : '//' (CHARS|'\'')* '\n' -> skip;
+
+
 
 MUNDCHAR :
   '\'' (CHARS) '\'' ;
@@ -94,7 +99,7 @@ fragment BACKS : '\\n' | '\\t' | '\\\\' | '\\"' | '\\\'';
 
 fragment WSPACE : (' ')+;
 
-fragment SIMBOLS: '.' | ',' | ':' | '?' | ';' | '%' ;
+fragment SIMBOLS: '.' | ',' | ':' | '?' | ';' | '%' | RPAR | LPAR  ;
 
 
 // '-'?INT (para negativo ser opcional)

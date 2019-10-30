@@ -27,8 +27,8 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
 
     @Override
     public void exitProgram(DecafParser.ProgramContext ctx) {
-        popScope();
-        System.out.println(globals);
+        //System.out.println(globals);
+	popScope();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
         popScope();
     }*/
 
-    @Override public void enterType_id(DecafParser.Type_idContext ctx) { 
+     @Override public void enterType_id(DecafParser.Type_idContext ctx) { 
         for(int i = 0 ; i < ctx.ID().size(); i++){
             defineVar(ctx.type(), ctx.ID(i).getSymbol());
         }
@@ -83,38 +83,13 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
         }
 
     }
-	
-
-
-
-
-    /*@Override
-    public void enterField_dec(DecafParser.Field_decContext ctx){
-        for(){
-
-        }
-        defineVar(ctx.type(), ctx.ID().getSymbol());
-    }
-//exitDecl enterDecl
-    @Override
-    public void exitField_dec(DecafParser.Field_decContext ctx) {
-        String name = ctx.ID().getSymbol().getText();
-        Symbol var = currentScope.resolve(name);
-        if ( var==null ) {
-            this.error(ctx.ID().getSymbol(), "no such variable: "+name);
-        }
-        if ( var instanceof FunctionSymbol ) {
-            this.error(ctx.ID().getSymbol(), name+" is not a variable");
-        }
-    }*/
 
     void defineVar(DecafParser.TypeContext typeCtx, Token nameToken) {
         int typeTokenType = typeCtx.start.getType();
         VariableSymbol var = new VariableSymbol(nameToken.getText());
 
-        // DecafSymbol.Type type = this.getType(typeTokenType); 
-        // var.setType(type);                                   //TestarQuarta! Com e sem
-         
+        // DecafSymbol.Type type = this.getType(typeTokenType);
+        // var.setType(type);
 
         currentScope.define(var); // Define symbol in current scope
     }

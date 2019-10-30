@@ -10,23 +10,19 @@ options
   tokenVocab=DecafLexer;
 }
 
-program: CLASS ID LCURLY (field_dec* method_decl*) RCURLY EOF;
+program: CLASS ID LCURLY field_decl* method_decl* RCURLY EOF;
 
-field_dec: (type_id | type_id LBRAC INT RBRAC) (COMMA type_id2 | COMMA type_id2 LBRAC INT RBRAC)* PVIRG;
-//(type ID | type ID LBRAC INT RBRAC) PVIRG ;
+field_decl: (type_id(COMMA type_id)* | type_id LBRAC INT RBRAC (COMMA type_id LBRAC INT RBRAC)*) PVIRG;
 
-method_decl: (type | VOID) LPAR (type_id (COMMA type_id | type_id LBRAC INTV RBRAC)(COMMA type_id2 | COMMA type_id2 LBRAC INTV RBRAC)*)* RPAR;
-//(type | VOID ) ID LPAR (type_id (COMMA type_id)*)? RPAR block ;
+method_decl: (type | VOID) ID LPAR (type_id(COMMA type_id)*)? RPAR block;
 
-block: LCURLY var_dec* state* RCURLY ;
+block: LCURLY var_decl* state* RCURLY;
 
-var_dec: type ID (COMMA type ID)* PVIRG ;
+var_decl: type_id (COMMA ID)* PVIRG;
 
-type: INTV | BOOLEAN ;
+type_id: type ID (COMMA ID)*;
 
-type_id: type ID (PVIRG ID)* ;
-
-type_id2: type? ID;
+type: INTV | BOOLEAN;
 
 state: 	loc assign_op expr PVIRG
 	| method_call PVIRG
@@ -41,7 +37,7 @@ assign_op:	  OPIGU
 		| OPMIG
 		| OPMME ;
 
-method_call:	  method_name LPAR (expr (COMMA expr)?)* RPAR
+method_call:	  method_name LPAR (expr (COMMA expr)*)? RPAR
 		| CALLOUT LPAR STRING_ (COMMA callout_arg (COMMA callout_arg)*)? RPAR;
 
 method_name: ID ;				
