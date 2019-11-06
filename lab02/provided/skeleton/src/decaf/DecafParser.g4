@@ -10,70 +10,103 @@ options
   tokenVocab=DecafLexer;
 }
 
-program: CLASS ID LCURLY field_decl* method_decl* RCURLY EOF;
+program	    : CLASS ID CHAVESQ field_decl* method_decl* CHAVEDIR EOF;
 
-field_decl: (type_id(COMMA type_id)* | type_id LBRAC INT RBRAC (COMMA type_id LBRAC INT RBRAC)*) PVIRG;
+field_decl  : (type_id | type_id COLCHETESQ int_literal COLCHETEDIR) (VIRGULA type_id2 | VIRGULA type_id2 COLCHETESQ int_literal COLCHETEDIR)* PONTOVIRGULA;
 
-method_decl: (type | VOID) ID LPAR (type_id(COMMA type_id)*)? RPAR block;
+method_decl : (type | VOID ) ID PARENTESESESQ (type_id (VIRGULA type_id | type_id COLCHETESQ int_literal COLCHETEDIR)(VIRGULA type_id2 | VIRGULA type_id2 COLCHETESQ int_literal COLCHETEDIR)*)* PARENTESESDIR block;
 
-block: LCURLY var_decl* state* RCURLY;
+block	    : CHAVESQ var_decl* statement* CHAVEDIR;
 
-var_decl: type_id (COMMA ID)* PVIRG;
+var_decl    : type_id (VIRGULA ID)* PONTOVIRGULA;
 
-type_id: type ID (COMMA ID)*;
+type_id : type ID (VIRGULA ID)*;
 
-type: INTV | BOOLEAN;
+type_id2 : type? ID;
+ 
+type	    : T_INT | BOOL;
 
-state: 	loc assign_op expr PVIRG
-	| method_call PVIRG
-	| IF LPAR expr RPAR block (ELSE block)? 
-	| FOR ID OPIGU expr COMMA expr block
-	| RETURN expr? PVIRG
-	| BREAK PVIRG
-	| CONTINUE PVIRG
-	| block;
+statement   : location assign_op expr PONTOVIRGULA 
+	    | method_call PONTOVIRGULA 
+	    | IF PARENTESESESQ expr PARENTESESDIR block (ELSE block)?
+	    | FOR ID IGUAL expr VIRGULA expr block
+  	    | RETURN  expr? PONTOVIRGULA
+	    | BREAK PONTOVIRGULA
+	    | CONTINUE PONTOVIRGULA
+	    | block;
 
-assign_op:	  OPIGU
-		| OPMIG
-		| OPMME ;
 
-method_call:	  method_name LPAR (expr (COMMA expr)*)? RPAR
-		| CALLOUT LPAR STRING_ (COMMA callout_arg (COMMA callout_arg)*)? RPAR;
+assign_op   : IGUAL 
+	    | MAISIGUAL
+	    | MENOSIGUAL;
 
-method_name: ID ;				
 
-loc: ID
-	|ID LBRAC expr RBRAC ;
+method_call : method_name PARENTESESESQ ((expr) (VIRGULA expr)*)? PARENTESESDIR | CALL PARENTESESESQ STRING (VIRGULA callout_arg)* PARENTESESDIR;
+	   
 
-expr: loc
-	| method_call
-	| literal 
-	| expr bin_op expr
-	| OPNEG expr
-	| DIF expr
-	| LPAR expr RPAR;
+method_name : ID;
 
-callout_arg: expr | STRING_ ;
 
-bin_op: arith_op | rel_op | eq_op | cond_op ;
+location    : ID
+	    | ID COLCHETESQ expr COLCHETEDIR;
 
-arith_op: OPPOS
-	| OPNEG
-	| OPMUL
-	| OPDIV
-	| OPPER;
+expr	    : location
+	    | method_call
+	    | literal
+	    | expr bin_op expr
+	    | SUBTRACAO expr
+	    | EXCLAMACAO expr
+	    | PARENTESESESQ expr PARENTESESDIR;
 
-rel_op:   OPMEN
-	| OPMAI
-	| OPMENI
-	| OPMAII;
+	
+callout_arg : expr | string_literal;
 
-eq_op:    OPCIG
-	| OPDIF ;
 
-cond_op: OPLOGE
-	|OPLOGO ;
+bin_op	    : arith_op | rel_op | eq_op | cond_op;
 
-literal: INT | MUNDCHAR| BOOLEANS ;
+
+arith_op    : ADICAO | SUBTRACAO | MULTIPLICACAO | BARRA  | PORCENTAGEM;
+
+
+rel_op	    : MENORQUE | MAIORQUE | MENORIGUAL | MAIORIGUAL ;
+
+
+eq_op 	    : IGUALIGUAL | DIFERENTED;
+
+
+cond_op	    : AND | BARRABARRA;
+
+
+literal	    : int_literal | char_literal | bool_literal;
+
+
+alpha_num   : alpha | digit;
+
+
+alpha 	    : LET;
+
+
+digit	    : NUM;
+
+
+hex_digit   : digit | LET+;
+
+
+int_literal : decimal_literal | hex_literal;
+
+
+decimal_literal : NUM;
+
+
+hex_literal : HEXLIT;
+
+
+bool_literal : BOOLEAN;
+
+
+char_literal : CHAR ;
+
+
+string_literal : STRING ;
 
 
