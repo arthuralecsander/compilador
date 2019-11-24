@@ -24,10 +24,11 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
     @Override
     public void enterProgram(DecafParser.ProgramContext ctx) {        
         globals = new GlobalScope(null);
-        
-        for (int x = 0; x<ctx.var_decl().size(); x++){
-            for(int y = 0; y<ctx.var_decl().size(); y++){
-                String globals = ctx.var_decl().get(x).ID().get(y).getText();                
+
+        for(int i = 0; i < ctx.var_decl().size(); i++){
+            
+            for (int j=0; j<ctx.var_decl().get(i).ID().size(); j++){
+             String globals = ctx.var_decl().get(i).ID().get(j).getText();
             }
         }
         pushScope(globals);
@@ -43,9 +44,11 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
         String motodos_tipo = "";
         String escopo = "";
         popScope();
-
-
     }
+
+    @Override public void enterMethod_call(DecafParser.Method_callContext ctx) { }
+
+	@Override public void exitMethod_call(DecafParser.Method_callContext ctx) { }
 
     @Override public void enterMethod_decl(DecafParser.Method_declContext ctx) { 
         String nome = ctx.ID().getText();
@@ -75,7 +78,7 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
                 String returns = ctx.block_decl().statement_decl().get(cont1).RETURN().getText();
                 if(returns.equals("return")){
                     for(int cont2 = 0; cont2<ctx.block_decl().statement_decl().size(); cont2++){
-                        String tipoReturn = ctx.block_decl().statement_decl().get(cont1).RETURN().expr_decl().get(cont2).getText();
+                        String tipoReturn = ctx.block_decl().statement_decl().get(cont1).expr_decl().get(cont2).getText();
                         if(tipoReturn.matches("[a-z]+")){
                             this.error(ctx.block_decl().statement_decl().get(cont1).RETURN().getSymbol(), "Faltando return "+ctx.ID().getText());
                             System.exit(0);
@@ -95,47 +98,42 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
 
 
     @Override public void enterStatement_decl(DecafParser.Statement_declContext ctx) {
-     /*try { 
-     int i =0;
-     String statement = ctx.location().ID().getText();
-        if(!vars.contains(statement)){  
-            this.error(ctx.location().ID().getSymbol(), "Esta variavel nao foi delcarada: "+statement);
-            System.exit(0);
+    try { 
+        int i =0;
+        String statement = ctx.location_decl().ID().getText();
+            if(!Variaveis.contains(statement)){  
+                this.error(ctx.location_decl().ID().getSymbol(), "Variavel nao declarada : "+statement);
+                System.exit(0);
             } 
-     }catch (Exception e) {  }
+    }catch (Exception e) {  }
 
-     try {
+    try {
         String metodo = ctx.IF().getText();
         if(metodo.equals("if")){
             for(int i =0; i<ctx.expr_decl().size(); i++){
-                String value =ctx.expr_decl().get(i).getText();
-                
-
+                String value =ctx.expr_decl().get(i).getText();            
                 if(!value.contains("<") && !value.contains(">") && !value.contains("==") && !value.contains("=<") && !value.contains("=>") ){
-                 this.error(ctx.IF().getSymbol(), "Error na declaracao de if: "+value);
-                 System.exit(0);
+                    this.error(ctx.IF().getSymbol(), "Error if: "+value);
+                    System.exit(0);
                 }
             }
             
         }
-      }catch (Exception e) {  }
+    }catch (Exception e) {  }
 
-       try {
+    try {
         String metodo = ctx.FOR().getText();
-          if(metodo.equals("for")){
-               for(int i =0; i<ctx.expr_decl().size(); i++){
-                     String forIgualdade = ctx.expr_decl().get(0).getText();
-
-                     if(forIgualdade.matches("[a-z]+")){
-                         this.error(ctx.FOR().getSymbol(), "A condicao inicial tem que ser um inteiro, encontrado: "+forIgualdade);
-                         System.exit(0);
-                     }
-               }
-
-
+        if(metodo.equals("for")){
+            for(int i =0; i<ctx.expr_decl().size(); i++){
+                String forIgualdade = ctx.expr_decl().get(0).getText();
+                if(forIgualdade.matches("[a-z]+")){
+                    this.error(ctx.FOR().getSymbol(), "Condicao inicial incorreta : "+forIgualdade);
+                    System.exit(0);
+                }
+            }
         }
 
-        }catch (Exception e) {  }*/
+    }catch (Exception e) {  }
 
      }
 
@@ -143,6 +141,19 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
 
 
      }
+
+    @Override public void enterArray_decl(DecafParser.Array_declContext ctx) { 
+        String val = ctx.INT().getText();
+        if(Integer.parseInt(val)<=0){
+            this.error(ctx.INT().getSymbol(),"Erro no tamanho do array"+val);
+            System.exit(0);
+        }
+    }
+
+	@Override public void exitArray_decl(DecafParser.Array_declContext ctx) { 
+        
+    }
+
 
 
     /*@Override
@@ -184,7 +195,7 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
         for(int cont1 = 0; cont1<ctx.ID().size(); cont1++){
             variaveisLocal = variaveisLocal + ctx.ID().get(cont1).getText()+", ";
             Variaveis.add(ctx.ID().get(cont1).getText());
-            defineVar(ctx.Type(), ctx.ID().get(cont1).getSymbol());
+            defineVar(ctx.type(), ctx.ID().get(cont1).getSymbol());
         }  
     }
     

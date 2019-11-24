@@ -50,37 +50,29 @@ IF	        : 'if';
 ELSE		: 'else';
 
 
+INT :  ('0'..'9')+ | HEXN;
 
-HEXLIT : (HEXDIGITO|NUM)+;
+HEXN : '0' 'x' (INT|LETRAS)+ ;
 
-NUM : INT(INT)*;
+MUNDCHAR :  '\'' (CHARS) '\'' ;
+STRING_ :  '\"' (CHARS | CARAC)+ '\"';
 
-CHAR : '\'' (ESC|NUM|LET)'\'';
+fragment CARAC : '\\' ('\'' | '\"' | '\\' | ID) ;
 
-STRING : '\"' (WS_|ESC|NUM|LET|SIMB)*'\"';
-
-ID  : (LET|'_') (LET|'_'|NUM)*;	
+ID  : (LETRAS|'_') (LETRAS|'_'|INT)*;	
 
 WS_ : (' ' | '\n'|'\t' ) -> skip;
 
 SL_COMMENT : '//' (~'\n')* '\n' -> skip;
 
-LET : LETR(LETR)*;
- 
+fragment CHARS : LETRAS | INT | BACKS | WSPACE | SIMBOLS;
 
-fragment
-ESC :  '\\' ('n'|'t'|'"'|'\\');
+fragment ESC :  '\\' ('n'|'t'|'"'|'\\');
 
-fragment 
-SIMB : ('\\\"'|'.'|','|'\\\''|'?'|':'|'%');
+fragment WSPACE : (' ')+;
 
-fragment
-LETR :  ('a'..'z'|'A'..'Z');
+fragment BACKS : ('\\\"'|'.'|','|'\\\''|':' | 'n');
 
-fragment
-HEXDIGITO : '0x'(NUM|'a'..'f'|'A'..'F')+; 
+fragment SIMBOLS: '.' | ',' | ':' | '?' | ';' | '%' ;
 
-fragment
-INT : ('0'..'9');
-
-
+fragment LETRAS :  ('a'..'z'|'A'..'Z');
