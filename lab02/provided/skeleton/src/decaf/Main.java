@@ -6,7 +6,7 @@ import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
+import javax.swing.SwingUtilities;
 
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -19,8 +19,10 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java6035.tools.CLI.*;
 import decaf.DecafSymbolsAndScopes;
 
-
 class Main {
+    static int lag = 1000;
+    static int alt = 700;
+
     public static void main(String[] args) {
         try {
         	CLI.parse (args, new String[0]);
@@ -44,26 +46,22 @@ class Main {
 
 		        			switch (token.getType())
 		        			{
-								case DecafLexer.ID:
-									type = " IDENTIFIER";
-									break;
-								case DecafLexer.MUNDCHAR:
-									type = " CHARLITERAL";
-									break;
-								case DecafLexer.STRING_:
-									type = " STRINGLITERAL";
-									break;
-
-								case DecafLexer.INT:
-									type = " INITLITERAL";
-									break;
-	
-								case DecafLexer.BOOL:
-									type = " BOOLEANLITERAL";
-									break;
-
-
-		        			}
+		        			case DecafLexer.ID:
+		        				type = " IDENTIFIER";
+		        				break;		
+                            case DecafLexer.MUNDCHAR:
+                                type = " CHARLITERAL";
+                                break;
+                            case DecafLexer.INT:
+                                type = " INTLITERAL";
+                                break;
+                            case DecafLexer.STRING_:
+                                type = " STRINGLITERAL";
+                                break;
+                            case DecafLexer.BOOL:
+                                type = " BOOLEANLITERAL";
+                                break;
+                            }
 		        			System.out.println (token.getLine() + type + " " + text);
 		        		}
 		        		done = true;
@@ -75,8 +73,8 @@ class Main {
         		}
         	}
         	else if (CLI.target == CLI.PARSE || CLI.target == CLI.DEFAULT)
-        	{
-        	    // Primeiro faz o parsing da cadeia
+            {
+                // Primeiro faz o parsing da cadeia
                 DecafLexer lexer = new DecafLexer(new ANTLRInputStream(inputStream));
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 DecafParser parser = new DecafParser(tokens);
@@ -84,14 +82,14 @@ class Main {
                 // Adiciona as regras semÃ¢nticas
                 ParseTree tree = parser.program();
 
+                //show AST in console
+                System.out.println(tree.toStringTree(parser));
+
                 if (CLI.debug) {
                     // Se estiver no modo debug imprime a Ã¡rvore de parsing
                     // Create Tree View
                     // Source: https://stackoverflow.com/questions/23809005/how-to-display-antlr-tree-gui
 
-
-                    //show AST in console
-                    System.out.println(tree.toStringTree(parser));
 
                     //show AST in GUI
                     JFrame frame = new JFrame("Antlr AST");
@@ -100,67 +98,56 @@ class Main {
                             parser.getRuleNames()),tree);
                     viewr.setScale(1.5);//scale a little
                     panel.add(viewr);
-                    frame.add(panel);
+                    JScrollPane scroll = new JScrollPane(panel);
+                    frame.add(scroll);
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    frame.setSize(200,200);
+                    frame.setSize(lag,alt);
+                    frame.setLocationRelativeTo(null);
+                    frame.setVisible(true);
+                }
+
+            } else if (CLI.target == CLI.INTER) {
+                // Primeiro faz o parsing da cadeia
+                DecafLexer lexer = new DecafLexer(new ANTLRInputStream(inputStream));
+                CommonTokenStream tokens = new CommonTokenStream(lexer);
+                DecafParser parser = new DecafParser(tokens);
+
+                // Adiciona as regras semânticas
+                ParseTree tree = parser.program();
+
+                // Realiza o parsing do programa
+                DecafSymbolsAndScopes def = new DecafSymbolsAndScopes();
+                ParseTreeWalker walker = new ParseTreeWalker();
+                walker.walk(def, tree);
+
+                //show AST in console
+                System.out.println(tree.toStringTree(parser));
+
+                if (CLI.debug) {
+                    // Se estiver no modo debug imprime a árvore de parsing
+                    // Create Tree View
+                    // Source: https://stackoverflow.com/questions/23809005/how-to-display-antlr-tree-gui
+
+
+                    //show AST in GUI
+                    JFrame frame = new JFrame("Antlr AST");
+                    JPanel panel = new JPanel();
+                    TreeViewer viewr = new TreeViewer(Arrays.asList(
+                            parser.getRuleNames()),tree);
+                    viewr.setScale(1.5);//scale a little
+                    panel.add(viewr);
+                    JScrollPane scroll = new JScrollPane(panel);
+                    frame.add(scroll);
+                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setSize(lag,alt);
+                    frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
                 }
 
             }
-        	 else if (CLI.target == CLI.INTER) {
-				// Primeiro faz o parsing da cadeia
-				DecafLexer lexer = new DecafLexer(new ANTLRInputStream(inputStream));
-				CommonTokenStream tokens = new CommonTokenStream(lexer);
-				DecafParser parser = new DecafParser(tokens);
-
-				// Adiciona as regras semânticas
-				ParseTree tree = parser.program();
-
-				// Realiza o parsing do programa
-				DecafSymbolsAndScopes def = new DecafSymbolsAndScopes();
-				ParseTreeWalker walker = new ParseTreeWalker();
-				walker.walk(def, tree); 
-
-				if (CLI.debug) {
-					// Se estiver no modo debug imprime a árvore de parsing
-					// Create Tree View
-					// Source: https://stackoverflow.com/questions/23809005/how-to-display-antlr-tree-gui
-
-
-					//show AST in console
-					System.out.println(tree.toStringTree(parser));
-
-					//show AST in GUI
-					JFrame frame = new JFrame("Antlr AST");
-					JPanel panel = new JPanel();
-					TreeViewer viewr = new TreeViewer(Arrays.asList(
-							parser.getRuleNames()),tree);
-					JScrollPane scrollPane = new JScrollPane(panel);
-           			scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            	 	scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-            		scrollPane.setBounds(50, 30, 300, 50);		
-					viewr.setScale(1.5);//scale a little
-					panel.add(viewr);
-					frame.add(panel);
-					frame.add(scrollPane);
-					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					frame.setSize(600,400);
-					frame.setVisible(true);
-				}
-			 
-		
-	
-
-
-
-	}
-
-
-
-
-
+            
         } catch(Exception e) {
-        	// print the error:
+            // print the error:
             System.out.println(CLI.infile+" "+e);
         }
     }

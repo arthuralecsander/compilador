@@ -12,34 +12,31 @@ options
 
 program	    : CLASS ID CHAVESQ (var_decl+)* method_decl* CHAVEDIR EOF;
 
-
-method_decl : (type | VOID ) ID PARENTESESESQ ((var_decl)+ PONTEXT* )? PARENTESESDIR block_decl  ;
+method_decl : (type | VOID ) ID PARENTESESESQ ((var_decl)+ pont* )? PARENTESESDIR block_decl  ;
 
 block_decl  : CHAVESQ var_decl* statement_decl* CHAVEDIR;
 
 var_decl    : type (ID pont* )* array_decl? pont*;
 
-type_id : type ID (VIRGULA ID)*;
+type_id : type ID;
  
 type	    : T_INT | BOOL;
 
 statement_decl   : location_decl assign_op expr_decl pont 
 	    | method_call pont 
-	    | IF PARENTESESESQ expr_decl PARENTESESDIR block_decl (ELSE block_decl)?
-	    | FOR ID IGUAL expr_decl VIRGULA expr_decl block_decl
+	    | IF expr_decl block_decl (ELSE block_decl)?
+	    | FOR ID IGUAL expr_decl pont* expr_decl block_decl
   	    | RETURN  expr_decl? pont
 	    | BREAK pont
 	    | CONTINUE pont
 	    | block_decl;
 
 
-assign_op   : IGUAL 
-	    | MAISIGUAL
-	    | MENOSIGUAL;
+assign_op   : IGUAL | MAISIGUAL | MENOSIGUAL;
 
 
-method_call : method_name PARENTESESESQ ((expr_decl) (VIRGULA expr_decl)*)? PARENTESESDIR |
- CALL PARENTESESESQ STRING_ (VIRGULA callout_arg)* PARENTESESDIR;
+method_call: ID PARENTESESESQ expr_decl (pont expr_decl)* PARENTESESDIR
+|	CALL PARENTESESESQ STRING_ ( pont* (expr_decl | STRING_)+  pont* )? PARENTESESDIR ;
 	   
 
 method_name : ID;
@@ -52,8 +49,8 @@ expr_decl	    : location_decl
 	    | method_call
 	    | literal
 	    | expr_decl bin_op expr_decl
-	    | SUBTRACAO expr_decl
-	    | EXCLAMACAO expr_decl
+	    | bin_op expr_decl*
+	    | pont expr_decl*
 	    | PARENTESESESQ expr_decl PARENTESESDIR;
 
 	

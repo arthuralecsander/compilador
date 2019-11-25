@@ -1,4 +1,5 @@
 package decaf;
+
 import org.antlr.symtab.FunctionSymbol;
 import org.antlr.symtab.GlobalScope;
 import org.antlr.symtab.LocalScope;
@@ -11,217 +12,240 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import java.util.ArrayList;
 
-
 public class DecafSymbolsAndScopes extends DecafParserBaseListener {
+
     ArrayList<String> Escopos = new ArrayList();
     ArrayList<String> Variaveis = new ArrayList();
     ArrayList<String> Metodos = new ArrayList();
-    
+
     ParseTreeProperty<Scope> scopes = new ParseTreeProperty<Scope>();
     GlobalScope globals;
-    Scope currentScope; // define symbols in this scope
+    Scope currentScope;
 
     @Override
-    public void enterProgram(DecafParser.ProgramContext ctx) {        
+    public void enterProgram(DecafParser.ProgramContext ctx) {
         globals = new GlobalScope(null);
 
-        for(int i = 0; i < ctx.var_decl().size(); i++){
-            
-            for (int j=0; j<ctx.var_decl().get(i).ID().size(); j++){
-             String globals = ctx.var_decl().get(i).ID().get(j).getText();
+        for (int a = 0; a < ctx.var_decl().size(); a++) {
+            for (int j = 0; j < ctx.var_decl().get(a).ID().size(); j++) {
+                String globals = ctx.var_decl().get(a).ID().get(j).getText();
             }
         }
+
         pushScope(globals);
     }
 
     @Override
     public void exitProgram(DecafParser.ProgramContext ctx) {
-        String variaveis = "";
-        String variaveis_nome = "";
-        String variaveis_tipo = "";
-        String metodos = "";
-        String metodo_nome = "";
-        String motodos_tipo = "";
         String escopo = "";
+        String vars = "";
+        String metodos = "";
+        String tipo_metodo = "";
+        String nome_metodo = "";
+        String var_tipo_metodo = "";
+        String var_name_metodo = "";
         popScope();
-    }
 
-    @Override public void enterMethod_call(DecafParser.Method_callContext ctx) { }
+        try {
 
-	@Override public void exitMethod_call(DecafParser.Method_callContext ctx) { }
+            for (int a = 0; a < ctx.method_decl().size(); a++) {
+                escopo = ctx.method_decl().get(a).ID().getText();
 
-    @Override public void enterMethod_decl(DecafParser.Method_declContext ctx) { 
-        String nome = ctx.ID().getText();
-        Escopos.add(ctx.ID().getText());
-
-        FunctionSymbol function = new FunctionSymbol(nome);
-
-        currentScope.define(function);
-        saveScope(ctx, function);
-        pushScope(function);
-
-        String t_void = ctx.VOID().getText();
-        String tipo = ctx.type().getText();
-        if(t_void.equals("void")){
-            for(int cont1 = 0; cont1<ctx.block_decl().statement_decl().size(); cont1++){
-                String returns = ctx.block_decl().statement_decl().get(cont1).RETURN().getText();
-
-                if(returns.equals("return")){
-                    this.error(ctx.block_decl().statement_decl().get(cont1).RETURN().getSymbol(), "Void nao pode ter return "+ctx.ID().getText() );
+                if (!Escopos.contains(escopo)) {
+                    this.error(ctx.method_decl().get(a).ID().getSymbol(), "Escopo nao declarado: " + escopo);
                     System.exit(0);
                 }
             }
-        }
-        if(tipo.equals("int")) {
 
-            for(int cont1 = 0; cont1<ctx.block_decl().statement_decl().size(); cont1++){
-                String returns = ctx.block_decl().statement_decl().get(cont1).RETURN().getText();
-                if(returns.equals("return")){
-                    for(int cont2 = 0; cont2<ctx.block_decl().statement_decl().size(); cont2++){
-                        String tipoReturn = ctx.block_decl().statement_decl().get(cont1).expr_decl().get(cont2).getText();
-                        if(tipoReturn.matches("[a-z]+")){
-                            this.error(ctx.block_decl().statement_decl().get(cont1).RETURN().getSymbol(), "Faltando return "+ctx.ID().getText());
-                            System.exit(0);
+            if (!Escopos.contains("main")) {
+                this.error(ctx.method_decl().get(0).ID().getSymbol(), "Main nao declarado");
+                System.exit(0);
+            }
+
+        } catch (Exception e) {
+        }
+
+        try {
+            int quantidadeV = 0;
+            int quantidadeVM = 0;
+            String tipoVariavel = "";
+            String nomeVariavel = "";
+            String tipoAtual[] = new String[10];
+            int contador1 = 0;
+            int contador2 = 0;
+            for (int a = 0; a < ctx.method_decl().size(); a++) {
+                tipoVariavel = ctx.method_decl().get(a).type().getText();
+                nomeVariavel = ctx.method_decl().get(a).ID().getText();
+
+                if (tipoVariavel.equals("int")) {
+                    for (int b = 0; b < ctx.method_decl().get(a).var_decl().size(); b++) {
+                        tipoAtual[contador1] = ctx.method_decl().get(a).var_decl().get(b).type().getText();
+                        contador1++;
+                        quantidadeV++;
+                    }
+                }
+
+                for (int b = 0; b < ctx.method_decl().get(1).block_decl().statement_decl().size(); b++) {
+                    for (int c = 0; c < ctx.method_decl().get(1).block_decl().statement_decl().get(b).expr_decl().size(); c++) {
+                        String metodoName = ctx.method_decl().get(1).block_decl().statement_decl().get(b).expr_decl().get(c).method_call().ID().getText();
+
+                        if (nomeVariavel.equals(metodoName)) {
+                            for (int d = 0; d < ctx.method_decl().get(1).block_decl().statement_decl().get(b).expr_decl().get(c).method_call().expr_decl().size(); d++) {
+                                String varAtualMetodo = ctx.method_decl().get(1).block_decl().statement_decl().get(b).expr_decl().get(c).method_call().expr_decl().get(d).getText();
+                                quantidadeVM++;
+
+                                try {
+                                    if (tipoAtual[contador2].equals("int")) {
+                                        if (varAtualMetodo.matches("[a-z]+")) {
+                                            this.error(ctx.method_decl().get(1).block_decl().statement_decl().get(b).expr_decl().get(c).method_call().ID().getSymbol(), "Erro, o metodo: " + nomeVariavel + ", no " + (contador2 + 1) + " valor, Espera um tipo " + tipoAtual[contador2] + ", e foi encontrado " + varAtualMetodo);
+                                            System.exit(0);
+                                        }
+                                    }
+
+                                    if (tipoAtual[contador2].equals("boolean")) {
+                                        if (!varAtualMetodo.equals("true") && !varAtualMetodo.equals("false")) {
+                                            this.error(ctx.method_decl().get(1).block_decl().statement_decl().get(b).expr_decl().get(c).method_call().ID().getSymbol(), "Erro, o metodo: " + nomeVariavel + ", no " + (contador2 + 1) + " valor, Espera um tipo " + tipoAtual[contador2] + ", e foi encontrado " + varAtualMetodo);
+                                            System.exit(0);
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                }
+
+                                contador2++;
+
+                            }
+                            if (quantidadeVM > quantidadeV) {
+                                this.error(ctx.method_decl().get(1).block_decl().statement_decl().get(b).expr_decl().get(c).method_call().ID().getSymbol(), "Erro, o metodo: " + nomeVariavel + " espera: " + quantidadeV + " Vars, foi encontrado: " + quantidadeVM);
+                                System.exit(0);
+                            }
                         }
+
+                    }
+
+                }
+            }
+
+        } catch (Exception e) {
+        }
+
+    }
+
+    @Override
+    public void enterMethod_decl(DecafParser.Method_declContext ctx) {
+        String nome = ctx.ID().getText();
+        Escopos.add(ctx.ID().getText());
+        FunctionSymbol funcao = new FunctionSymbol(nome);
+        currentScope.define(funcao);
+        saveScope(ctx, funcao);
+        pushScope(funcao);
+
+        try {
+            String tVoid = ctx.VOID().getText();
+            if (tVoid.equals("void")) {
+
+                for (int a = 0; a < ctx.block_decl().statement_decl().size(); a++) {
+                    String returns = ctx.block_decl().statement_decl().get(a).RETURN().getText();
+
+                    if (returns.equals("return")) {
+                        this.error(ctx.block_decl().statement_decl().get(a).RETURN().getSymbol(), "Retorno nao disponivel pra esse metodo: " + ctx.ID().getText());
+                        System.exit(0);
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+
+    }
+
+    @Override
+    public void exitMethod_decl(DecafParser.Method_declContext ctx) {
+        popScope();
+    }
+
+    @Override
+    public void enterStatement_decl(DecafParser.Statement_declContext ctx) {
+        try {
+            String statement = ctx.location_decl().ID().getText();
+            if (!Variaveis.contains(statement)) {
+                this.error(ctx.location_decl().ID().getSymbol(), "Variavel nao delcarada: " + statement);
+                System.exit(0);
+            }
+        } catch (Exception e) {
+        }
+
+        try {
+            String metodo = ctx.IF().getText();
+            if (metodo.equals("if")) {
+                for (int a = 0; a < ctx.expr_decl().size(); a++) {
+                    String value = ctx.expr_decl().get(a).getText();
+
+                    if (!value.contains("<") && !value.contains(">") && !value.contains("==") && !value.contains("=<") && !value.contains("=>")) {
+                        this.error(ctx.IF().getSymbol(), "Error de if: " + value);
+                        System.exit(0);
                     }
                 }
 
             }
+        } catch (Exception e) {
         }
 
-    }
-
-	@Override public void exitMethod_decl(DecafParser.Method_declContext ctx) { 
-        popScope();
-    }
-
-
-
-    @Override public void enterStatement_decl(DecafParser.Statement_declContext ctx) {
-    try { 
-        int i =0;
-        String statement = ctx.location_decl().ID().getText();
-            if(!Variaveis.contains(statement)){  
-                this.error(ctx.location_decl().ID().getSymbol(), "Variavel nao declarada : "+statement);
-                System.exit(0);
-            } 
-    }catch (Exception e) {  }
-
-    try {
-        String metodo = ctx.IF().getText();
-        if(metodo.equals("if")){
-            for(int i =0; i<ctx.expr_decl().size(); i++){
-                String value =ctx.expr_decl().get(i).getText();            
-                if(!value.contains("<") && !value.contains(">") && !value.contains("==") && !value.contains("=<") && !value.contains("=>") ){
-                    this.error(ctx.IF().getSymbol(), "Error if: "+value);
-                    System.exit(0);
-                }
-            }
-            
-        }
-    }catch (Exception e) {  }
-
-    try {
-        String metodo = ctx.FOR().getText();
-        if(metodo.equals("for")){
-            for(int i =0; i<ctx.expr_decl().size(); i++){
-                String forIgualdade = ctx.expr_decl().get(0).getText();
-                if(forIgualdade.matches("[a-z]+")){
-                    this.error(ctx.FOR().getSymbol(), "Condicao inicial incorreta : "+forIgualdade);
-                    System.exit(0);
-                }
-            }
-        }
-
-    }catch (Exception e) {  }
-
-     }
-
-     @Override public void exitStatement_decl(DecafParser.Statement_declContext ctx) {
-
-
-     }
-
-    @Override public void enterArray_decl(DecafParser.Array_declContext ctx) { 
-        String val = ctx.INT().getText();
-        if(Integer.parseInt(val)<=0){
-            this.error(ctx.INT().getSymbol(),"Erro no tamanho do array"+val);
-            System.exit(0);
-        }
-    }
-
-	@Override public void exitArray_decl(DecafParser.Array_declContext ctx) { 
-        
-    }
-
-
-
-    /*@Override
-    public void enterBlock(DecafParser.BlockContext ctx) {
-        LocalScope l = new LocalScope(currentScope);
-        saveScope(ctx, currentScope);
-        // pushScope(l);
     }
 
     @Override
-    public void exitBlock(DecafParser.BlockContext ctx) {
-        popScope();
-    }*/
-    
+    public void exitStatement_decl(DecafParser.Statement_declContext ctx) {
+
+    }
+
     @Override
-    public void enterType_id(DecafParser.Type_idContext ctx) {
-        for(int i = 0 ; i < ctx.ID().size(); i++){
-            defineVar(ctx.type(), ctx.ID(i).getSymbol());
+    public void enterVar_decl(DecafParser.Var_declContext ctx) {
+        String varsLocal = "";
+        for (int a = 0; a < ctx.ID().size(); a++) {
+            varsLocal = varsLocal + ctx.ID().get(a).getText() + ", ";
+            Variaveis.add(ctx.ID().get(a).getText());
+            defineVar(ctx.type(), ctx.ID().get(a).getSymbol());
         }
     }
 
     @Override
-    public void exitType_id(DecafParser.Type_idContext ctx) {
-        for(int i = 0 ; i < ctx.ID().size(); i++){
-            String name = ctx.ID(i).getSymbol().getText();
-            Symbol defineVar = currentScope.resolve(name);
-            if (defineVar == null){
-                this.error(ctx.ID(i).getSymbol(), "no variable: "+ name);
-            }
-            if (defineVar instanceof FunctionSymbol){
-                 this.error(ctx.ID(i).getSymbol(), "is not a variable: "+ name);
-
-            }
-    }
-    }
-
-    @Override public void enterVar_decl(DecafParser.Var_declContext ctx) {
-        String variaveisLocal = "";
-        for(int cont1 = 0; cont1<ctx.ID().size(); cont1++){
-            variaveisLocal = variaveisLocal + ctx.ID().get(cont1).getText()+", ";
-            Variaveis.add(ctx.ID().get(cont1).getText());
-            defineVar(ctx.type(), ctx.ID().get(cont1).getSymbol());
-        }  
-    }
-    
-	@Override public void exitVar_decl(DecafParser.Var_declContext ctx) { 
-            for(int cont1 = 0; cont1<ctx.ID().size(); cont1++){
-            String nome = ctx.ID().get(cont1).getSymbol().getText();
-            Symbol variavel = currentScope.resolve(nome);
-
-            if (variavel == null){
-                this.error(ctx.ID().get(cont1).getSymbol(), "Nao existe esta variavel:"+nome );
-                System.exit(0);
-            } else if (variavel instanceof FunctionSymbol ){
-                this.error(ctx.ID().get(cont1).getSymbol(), "Nao e uma variavel: "+nome);
+    public void exitVar_decl(DecafParser.Var_declContext ctx) {
+        for (int a = 0; a < ctx.ID().size(); a++) {
+            String name = ctx.ID().get(a).getSymbol().getText();
+            Symbol var = currentScope.resolve(name);
+            if (var == null) {
+                this.error(ctx.ID().get(a).getSymbol(), "Variavel nao existe: " + name);
                 System.exit(0);
             }
+            if (var instanceof FunctionSymbol) {
+                this.error(ctx.ID().get(a).getSymbol(), name + " nao e uma variavel");
+                System.exit(0);
+            }
+
         }
+    }
+
+    @Override
+    public void enterArray_decl(DecafParser.Array_declContext ctx) {
+        try {
+
+            String valor = ctx.INT().getText();
+            if (Integer.parseInt(valor) <= 0) {
+                this.error(ctx.INT().getSymbol(), "Array com tamanho negativo ou 0: " + valor);
+                System.exit(0);
+            }
+
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void exitArray_decl(DecafParser.Array_declContext ctx) {
+
     }
 
     void defineVar(DecafParser.TypeContext typeCtx, Token nameToken) {
         int typeTokenType = typeCtx.start.getType();
         VariableSymbol var = new VariableSymbol(nameToken.getText());
-
-        // DecafSymbol.Type type = this.getType(typeTokenType);
-        // var.setType(type);
-
-        currentScope.define(var); // Define symbol in current scope
+        currentScope.define(var);
     }
 
     /**
@@ -231,7 +255,7 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
      */
     private void pushScope(Scope s) {
         currentScope = s;
-        System.out.println("entering: "+currentScope.getName()+":"+s);
+        System.out.println("entering: " + currentScope.getName() + ":" + s);
     }
 
     /**
@@ -248,7 +272,7 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
      * Muda para o contexto superior e atualia o escopo
      */
     private void popScope() {
-        System.out.println("leaving: "+currentScope.getName()+":"+currentScope);
+        System.out.println("leaving: " + currentScope.getName() + ":" + currentScope);
         currentScope = currentScope.getEnclosingScope();
     }
 
@@ -264,9 +288,11 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
      * @return
      */
     public static DecafSymbol.Type getType(int tokenType) {
-        switch ( tokenType ) {
-            case DecafParser.VOID :  return DecafSymbol.Type.tVOID;
-            case DecafParser.T_INT :   return DecafSymbol.Type.tINT;
+        switch (tokenType) {
+            case DecafParser.VOID:
+                return DecafSymbol.Type.tVOID;
+            case DecafParser.INT:
+                return DecafSymbol.Type.tINT;
         }
         return DecafSymbol.Type.tINVALID;
     }
