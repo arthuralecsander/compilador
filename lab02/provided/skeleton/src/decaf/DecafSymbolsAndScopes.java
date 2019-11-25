@@ -164,14 +164,6 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
 
     @Override
     public void enterStatement_decl(DecafParser.Statement_declContext ctx) {
-        try {
-            String statement = ctx.location_decl().ID().getText();
-            if (!Variaveis.contains(statement)) {
-                this.error(ctx.location_decl().ID().getSymbol(), "Variavel nao delcarada: " + statement);
-                System.exit(0);
-            }
-        } catch (Exception e) {
-        }
 
         try {
             String metodo = ctx.IF().getText();
