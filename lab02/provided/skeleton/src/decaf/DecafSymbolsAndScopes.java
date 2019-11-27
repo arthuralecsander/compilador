@@ -128,6 +128,56 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
         } catch (Exception e) {
         }
 
+        try {
+            for (int a = 0; a < ctx.var_decl().size(); a++) {
+                if (ctx.var_decl().get(a).getText().contains("[")) {
+                    String ArrayValue = ctx.var_decl().get(a).array_decl().INT().getText();
+                    if (ctx.var_decl().get(a).array_decl().getText().contains("[") && ctx.var_decl().get(a).array_decl().getText().contains("]")) {
+                        String ArrayName = ctx.var_decl().get(a).ID().get(0).getText();
+                        String ArrayType = ctx.var_decl().get(a).type().getText();
+
+                        for (int b = 0; b < ctx.method_decl().size(); b++) {
+                            for (int c = 0; c < ctx.method_decl().get(b).block_decl().statement_decl().size(); c++) {
+                                String declaracaoValue = ctx.method_decl().get(b).block_decl().statement_decl().get(c).location_decl().expr_decl().getText();
+                                String declaracaoName = ctx.method_decl().get(b).block_decl().statement_decl().get(c).location_decl().ID().getText();
+                                String declaracaoResultado = ctx.method_decl().get(b).block_decl().statement_decl().get(c).expr_decl().get(0).getText();
+
+                                if (declaracaoName.equals(ArrayName)) {
+
+                                    if (ArrayType.contains("int")) {
+
+                                        if (declaracaoValue.matches("[a-z]+")) {
+                                            this.error(ctx.method_decl().get(b).block_decl().statement_decl().get(c).location_decl().ID().getSymbol(), "Esta variavel espera retorno int: " + ArrayName);
+                                            System.exit(0);
+                                        }
+
+                                        if (Integer.parseInt(declaracaoValue) > Integer.parseInt(ArrayValue) || Integer.parseInt(declaracaoValue) <= 0) {
+                                            this.error(ctx.method_decl().get(b).block_decl().statement_decl().get(c).location_decl().ID().getSymbol(), "Esta variavel espera uma array de tamanho minimo: " + ArrayValue);
+                                            System.exit(0);
+                                        }
+
+                                        if (declaracaoResultado.matches("[a-z]+")) {
+                                            this.error(ctx.method_decl().get(b).block_decl().statement_decl().get(c).location_decl().ID().getSymbol(), "Esta variavel: " + ArrayName + " espera um tipo int");
+                                            System.exit(0);
+                                        }
+
+                                        if (declaracaoResultado.contains("<") || declaracaoResultado.contains(">") || declaracaoResultado.contains("==") || declaracaoResultado.contains("=<") || declaracaoResultado.contains("=>")) {
+                                            this.error(ctx.method_decl().get(b).block_decl().statement_decl().get(c).location_decl().ID().getSymbol(), "Esta variavel: " + ArrayName + " espera um tipo int");
+                                            System.exit(0);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
