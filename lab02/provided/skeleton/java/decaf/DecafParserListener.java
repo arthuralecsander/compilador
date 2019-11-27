@@ -1,4 +1,4 @@
-// Generated from /home/uniceub/Arthur/compilador/lab02/provided/skeleton/src/decaf/DecafParser.g4 by ANTLR 4.5.3
+// Generated from /home/uniceub/Compila/compilador/lab02/provided/skeleton/src/decaf/DecafParser.g4 by ANTLR 4.5.3
 
 package decaf;
 
@@ -20,16 +20,6 @@ public interface DecafParserListener extends ParseTreeListener {
 	 */
 	void exitProgram(DecafParser.ProgramContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DecafParser#field_dec}.
-	 * @param ctx the parse tree
-	 */
-	void enterField_dec(DecafParser.Field_decContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DecafParser#field_dec}.
-	 * @param ctx the parse tree
-	 */
-	void exitField_dec(DecafParser.Field_decContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link DecafParser#method_decl}.
 	 * @param ctx the parse tree
 	 */
@@ -40,25 +30,35 @@ public interface DecafParserListener extends ParseTreeListener {
 	 */
 	void exitMethod_decl(DecafParser.Method_declContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DecafParser#block}.
+	 * Enter a parse tree produced by {@link DecafParser#block_decl}.
 	 * @param ctx the parse tree
 	 */
-	void enterBlock(DecafParser.BlockContext ctx);
+	void enterBlock_decl(DecafParser.Block_declContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DecafParser#block}.
+	 * Exit a parse tree produced by {@link DecafParser#block_decl}.
 	 * @param ctx the parse tree
 	 */
-	void exitBlock(DecafParser.BlockContext ctx);
+	void exitBlock_decl(DecafParser.Block_declContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DecafParser#var_dec}.
+	 * Enter a parse tree produced by {@link DecafParser#var_decl}.
 	 * @param ctx the parse tree
 	 */
-	void enterVar_dec(DecafParser.Var_decContext ctx);
+	void enterVar_decl(DecafParser.Var_declContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DecafParser#var_dec}.
+	 * Exit a parse tree produced by {@link DecafParser#var_decl}.
 	 * @param ctx the parse tree
 	 */
-	void exitVar_dec(DecafParser.Var_decContext ctx);
+	void exitVar_decl(DecafParser.Var_declContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DecafParser#type_id}.
+	 * @param ctx the parse tree
+	 */
+	void enterType_id(DecafParser.Type_idContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DecafParser#type_id}.
+	 * @param ctx the parse tree
+	 */
+	void exitType_id(DecafParser.Type_idContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DecafParser#type}.
 	 * @param ctx the parse tree
@@ -70,15 +70,15 @@ public interface DecafParserListener extends ParseTreeListener {
 	 */
 	void exitType(DecafParser.TypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DecafParser#state}.
+	 * Enter a parse tree produced by {@link DecafParser#statement_decl}.
 	 * @param ctx the parse tree
 	 */
-	void enterState(DecafParser.StateContext ctx);
+	void enterStatement_decl(DecafParser.Statement_declContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DecafParser#state}.
+	 * Exit a parse tree produced by {@link DecafParser#statement_decl}.
 	 * @param ctx the parse tree
 	 */
-	void exitState(DecafParser.StateContext ctx);
+	void exitStatement_decl(DecafParser.Statement_declContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DecafParser#assign_op}.
 	 * @param ctx the parse tree
@@ -110,25 +110,25 @@ public interface DecafParserListener extends ParseTreeListener {
 	 */
 	void exitMethod_name(DecafParser.Method_nameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DecafParser#loc}.
+	 * Enter a parse tree produced by {@link DecafParser#location_decl}.
 	 * @param ctx the parse tree
 	 */
-	void enterLoc(DecafParser.LocContext ctx);
+	void enterLocation_decl(DecafParser.Location_declContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DecafParser#loc}.
+	 * Exit a parse tree produced by {@link DecafParser#location_decl}.
 	 * @param ctx the parse tree
 	 */
-	void exitLoc(DecafParser.LocContext ctx);
+	void exitLocation_decl(DecafParser.Location_declContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DecafParser#expr}.
+	 * Enter a parse tree produced by {@link DecafParser#expr_decl}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpr(DecafParser.ExprContext ctx);
+	void enterExpr_decl(DecafParser.Expr_declContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DecafParser#expr}.
+	 * Exit a parse tree produced by {@link DecafParser#expr_decl}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpr(DecafParser.ExprContext ctx);
+	void exitExpr_decl(DecafParser.Expr_declContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DecafParser#callout_arg}.
 	 * @param ctx the parse tree
@@ -139,6 +139,16 @@ public interface DecafParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCallout_arg(DecafParser.Callout_argContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DecafParser#pont}.
+	 * @param ctx the parse tree
+	 */
+	void enterPont(DecafParser.PontContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DecafParser#pont}.
+	 * @param ctx the parse tree
+	 */
+	void exitPont(DecafParser.PontContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DecafParser#bin_op}.
 	 * @param ctx the parse tree
@@ -199,4 +209,24 @@ public interface DecafParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLiteral(DecafParser.LiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DecafParser#int_literal}.
+	 * @param ctx the parse tree
+	 */
+	void enterInt_literal(DecafParser.Int_literalContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DecafParser#int_literal}.
+	 * @param ctx the parse tree
+	 */
+	void exitInt_literal(DecafParser.Int_literalContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DecafParser#array_decl}.
+	 * @param ctx the parse tree
+	 */
+	void enterArray_decl(DecafParser.Array_declContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DecafParser#array_decl}.
+	 * @param ctx the parse tree
+	 */
+	void exitArray_decl(DecafParser.Array_declContext ctx);
 }

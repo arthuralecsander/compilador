@@ -178,6 +178,74 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
         } catch (Exception e) {
         }
 
+        try {
+
+            for (int a = 0; a < ctx.var_decl().size(); a++) {
+                String varType = ctx.var_decl().get(a).type().getText();
+
+                for (int b = 0; b < ctx.var_decl().get(a).ID().size(); b++) {
+                    String varName = ctx.var_decl().get(a).ID().get(b).getText();
+
+                    if (varType.equals("boolean")) {
+                        for (int c = 0; c < ctx.method_decl().size(); c++) {
+                            for (int d = 0; d < ctx.method_decl().get(c).block_decl().statement_decl().size(); d++) {
+                                String metodoName = ctx.method_decl().get(c).block_decl().statement_decl().get(d).location_decl().getText();
+
+                                if (varName.equals(metodoName)) {
+                                    try {
+                                        String operador = ctx.method_decl().get(c).block_decl().statement_decl().get(d).assign_op().getText();
+                                        if (operador.equals("+=") || operador.equals("-=")) {
+                                            this.error(ctx.method_decl().get(c).block_decl().statement_decl().get(d).location_decl().ID().getSymbol(), "Erro na declaracao em: " + operador);
+                                            System.exit(0);
+                                        }
+
+                                    } catch (Exception e) {
+                                    }
+
+                                    for (int f = 0; f < ctx.method_decl().get(c).block_decl().statement_decl().get(d).expr_decl().size(); f++) {
+                                        String metodoResultado = ctx.method_decl().get(c).block_decl().statement_decl().get(d).expr_decl().get(f).getText();
+                                        String metodoResultadoPrimeiro = ctx.method_decl().get(c).block_decl().statement_decl().get(d).expr_decl().get(f).expr_decl().get(0).getText();
+
+                                        if (metodoResultadoPrimeiro.equals("true") || metodoResultadoPrimeiro.equals("false")) {
+                                            if (metodoResultado.contains("<") || metodoResultado.contains(">") || metodoResultado.contains("=<") || metodoResultado.contains("=>") || metodoResultado.contains("=")) {
+                                                this.error(ctx.method_decl().get(c).block_decl().statement_decl().get(d).location_decl().ID().getSymbol(), "Erro na declaracao em: " + metodoResultado);
+                                                System.exit(0);
+                                            }
+                                        }
+
+                                        if (metodoResultadoPrimeiro.matches("[0-9]+")) {
+                                            if (!metodoResultado.equals("==") || !metodoResultado.equals("!=")) {
+                                                this.error(ctx.method_decl().get(c).block_decl().statement_decl().get(d).location_decl().ID().getSymbol(), "Erro na declaracao em: " + metodoResultado);
+                                                System.exit(0);
+                                            }
+                                        }
+
+                                        try {
+                                            String metodoResultadoSegundo = ctx.method_decl().get(c).block_decl().statement_decl().get(d).expr_decl().get(f).expr_decl().get(1).getText();
+                                            if (metodoResultadoSegundo.equals("true") || metodoResultadoSegundo.equals("false")) {
+                                                if (!metodoResultadoPrimeiro.equals("true") && !metodoResultadoPrimeiro.equals("false")) {
+                                                    this.error(ctx.method_decl().get(c).block_decl().statement_decl().get(d).location_decl().ID().getSymbol(), "Erro na declaracao em: " + metodoResultado);
+                                                    System.exit(0);
+                                                }
+                                            }
+
+                                        } catch (Exception e) {
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
@@ -205,6 +273,29 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
         } catch (Exception e) {
         }
 
+        try {
+            String tipo = ctx.type().getText();
+            if (tipo.equals("int")) {
+
+                for (int a = 0; a < ctx.block_decl().statement_decl().size(); a++) {
+                    String returns = ctx.block_decl().statement_decl().get(a).RETURN().getText();
+
+                    if (returns.equals("return")) {
+                        for (int b = 0; b < ctx.block_decl().statement_decl().get(a).expr_decl().size(); b++) {
+
+                            String tipoRetorno = ctx.block_decl().statement_decl().get(a).expr_decl().get(b).getText();
+                            if (tipoRetorno.matches("[a-z]+")) {
+                                this.error(ctx.block_decl().statement_decl().get(a).RETURN().getSymbol(), "Espera de retorno de int: " + ctx.ID().getText());
+                                System.exit(0);
+                            }
+
+                        }
+
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -239,11 +330,28 @@ public class DecafSymbolsAndScopes extends DecafParserBaseListener {
         } catch (Exception e) {
         }
 
+        try {
+            String metodo = ctx.FOR().getText();
+            if (metodo.equals("for")) {
+                for (int a=  0; a < ctx.expr_decl().size(); a++) {
+                    String forIgualdade = ctx.expr_decl().get(0).getText();
+
+                    if (forIgualdade.matches("[a-z]+")) {
+                        this.error(ctx.FOR().getSymbol(), "Espera int, encontrado: " + forIgualdade);
+                        System.exit(0);
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
     public void exitStatement_decl(DecafParser.Statement_declContext ctx) {
-
+	
     }
 
     @Override
